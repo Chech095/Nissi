@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nissi Moda y Accesorios</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #fff8f2; /* Color de fondo principal */
+            background-image: none; /* Elimina la imagen de fondo */
+        }
+        .product-card {
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+            position: relative;
+        }
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+        }
+        .offer-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: #e6778e; /* Nuevo tono de rosa para la oferta */
+            color: white;
+            padding: 4px 8px;
+            border-radius: 9999px;
+            font-weight: bold;
+            font-size: 0.875rem;
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.1);
+            }
+        }
+        .product-card, .status-message {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        }
+        .product-card.is-visible, .status-message.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Estilos del modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 50;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+        .modal-overlay.open {
+            opacity: 1;
+            visibility: visible;
+        }
+        .modal-content {
+            background-color: white;
+            padding: 2.5rem; /* Aumenta el padding para más espacio */
+            border-radius: 16px; /* Aumenta el radio para un look más suave */
+            max-width: 95%; /* Permite que el modal sea más ancho en pantallas grandes */
+            max-height: 95%;
+            overflow-y: auto;
+            transform: scale(0.9);
+            transition: transform 0.3s ease;
+            position: relative;
+        }
+        .modal-overlay.open .modal-content {
+            transform: scale(1);
+        }
+        .social-icon {
+            filter: grayscale(100%);
+            transition: filter 0.3s ease, transform 0.3s ease;
+        }
+        .social-icon:hover {
+            filter: grayscale(0%);
+            transform: scale(1.1);
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-[#fff8f2] min-h-screen">
+        <!-- Encabezado y Barra de Navegación -->
+        <header class="bg-white shadow-lg sticky top-0 z-10">
+            <div class="container mx-auto px-4 py-6 flex flex-col md:flex-row justify-between items-center">
+                <img src="https://i.ibb.co/JjmyFqWW/image-removebg-preview.png" alt="Nuevo logo de Nissi Moda y Accesorios" class="h-24 w-auto object-contain rounded-md">
+                <nav class="hidden md:flex space-x-6">
+                    <a href="#productos" class="text-gray-600 hover:text-gray-800 transition">Productos</a>
+                    <a href="#acerca" class="text-gray-600 hover:text-gray-800 transition">Acerca de</a>
+                    <a href="#contacto" class="text-gray-600 hover:text-gray-800 transition">Contacto</a>
+                </nav>
+            </div>
+        </header>
+    
+        <main class="container mx-auto px-4 py-12">
+            <h2 class="text-4xl font-semibold text-center mb-4 text-gray-800">Todos Nuestros Accesorios</h2>
+
+            <!-- Filtros en la parte superior -->
+            <div id="filter-container" class="bg-white p-4 rounded-lg shadow-md flex flex-wrap gap-4 items-center justify-center mb-8">
+                <h3 class="text-lg font-bold text-gray-800">Filtrar por:</h3>
+                <div id="category-checkboxes" class="flex flex-wrap gap-4">
+                    <!-- Checkboxes se cargarán aquí dinámicamente -->
+                </div>
+            </div>
+    
+            <!-- Contenido principal de la tienda -->
+            <div class="flex-1">
+                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8" id="products-list">
+                    <!-- Los productos se cargarán aquí dinámicamente -->
+                </div>
+                <div id="status-message" class="text-center text-gray-600 mt-8"></div>
+            </div>
+        </main>
+    
+        <section id="acerca" class="bg-white py-12">
+            <div class="container mx-auto px-4 text-center">
+                <h3 class="text-2xl font-semibold mb-4 text-gray-800">Acerca de Nuestra Tienda</h3>
+                <p class="text-gray-600 max-w-2xl mx-auto">
+                    Nissi Moda y Accesorios nació el 23 de diciembre de 2023 💖, del sueño y la pasión de las hermanas Tintilay. Más que una tienda, somos un proyecto de vida impulsado por el cariño y la atención que ponemos en cada detalle. Cada accesorio es una promesa de calidad y estilo ✨, un pedacito de nuestra historia hecho para que brilles con luz propia. ¡Gracias por ser parte de este hermoso camino! Además, todas las fotos de nuestros productos son reales, tomadas directamente por el personal de Nissi en nuestro local. ✨
+                </p>
+            </div>
+        </section>
+    
+        <footer class="bg-gray-800 text-white py-6">
+            <div class="container mx-auto px-4 text-center">
+                <!-- Contenedor principal para el pie de página -->
+                <div class="flex flex-col md:flex-row md:justify-around items-center md:items-start w-full gap-8">
+                    <!-- Bloque de ubicación a la izquierda -->
+                    <div class="flex flex-col items-center">
+                        <p class="mb-2 text-lg">📍 Encuéntranos aquí:</p>
+                        <div id="locationImageContainer" class="w-full max-w-[120px] rounded-lg overflow-hidden shadow-lg mb-2 cursor-pointer transition transform hover:scale-105">
+                            <img id="locationImage" src="https://i.ibb.co/7NbfNHpH/Ubicacion.png" alt="Mapa de la ubicación de Nissi Moda y Accesorios" class="w-full h-auto">
+                        </div>
+                        <a href="https://maps.app.goo.gl/xtCERYmDnEBWHwhi7" target="_blank" class="text-white text-sm font-semibold hover:underline block">
+                            Ver Ubicación en Google Maps
+                        </a>
+                    </div>
+                    
+                    <!-- Bloque de redes sociales a la derecha -->
+                    <div class="flex flex-col items-center">
+                        <p class="mb-2 text-lg">Síguenos en nuestras redes 👇</p>
+                        <div class="flex justify-center space-x-6">
+                            <a href="https://www.instagram.com/nissi.modayaccesorios/" target="_blank">
+                                <img src="https://upload.wikimedia.org/wikipedia/commons/a/a5/Instagram_icon.png" alt="Instagram Logo" class="w-8 h-8 social-icon">
+                            </a>
+                            <a href="https://www.facebook.com/Nissimodayaccesorios" target="_blank">
+                                <img src="https://upload.wikimedia.org/wikipedia/commons/c/cd/Facebook_logo_%28square%29.png" alt="Facebook Logo" class="w-8 h-8 social-icon">
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sección de derechos de autor -->
+                <p class="mt-4 text-xs opacity-75 text-center border-t border-gray-600 pt-4">© 2023 Nissi Moda y Accesorios. Todos los derechos reservados.</p>
+            </div>
+        </footer>
+    </div>
+    
+    <!-- Modal para ver detalles y contactar -->
+    <div id="productModal" class="modal-overlay">
+        <div class="modal-content w-full max-w-sm md:max-w-2xl">
+            <button id="closeModalBtn" class="absolute top-2 right-2 text-gray-500 hover:text-gray-800 text-3xl font-bold">&times;</button>
+            <div class="flex flex-col md:flex-row gap-6 items-center">
+                <img id="modal-image" src="" alt="Imagen del producto" class="w-full md:w-1/2 rounded-lg object-contain h-auto">
+                <div class="flex-1">
+                    <h3 id="modal-title" class="text-3xl font-bold mb-4"></h3>
+                    <p id="modal-description" class="text-gray-700 mb-6"></p>
+                    <p id="modal-price" class="text-2xl font-bold text-gray-800 mb-6"></p>
+                    
+                    <!-- Contenedor para los mensajes de nota y fotos -->
+                    <div class="bg-pink-50 p-4 rounded-lg border border-pink-100 mb-6">
+                        <p class="text-center text-sm text-pink-700 mb-2">
+                            📝 Nota: Este es un catálogo. Para precios, consultas y pedidos, contáctanos por WhatsApp.
+                        </p>
+                        <p class="text-center text-xs text-pink-700">
+                            ✨ Todas las fotos de nuestros productos son reales, tomadas directamente por el personal de Nissi en nuestro local.
+                        </p>
+                    </div>
+
+                    <a id="modal-whatsapp-link" href="#" target="_blank" class="block w-full text-center px-4 py-3 bg-[#f2b7d4] text-white rounded-full hover:bg-[#e9a1c1] transition font-semibold">
+                        Contactar por WhatsApp
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Nuevo Modal para la imagen de la ubicación -->
+    <div id="locationModal" class="modal-overlay">
+        <div class="modal-content w-full max-w-2xl md:max-w-4xl">
+            <button id="closeLocationModalBtn" class="absolute top-4 right-4 text-white hover:text-gray-300 text-3xl font-bold">&times;</button>
+            <img id="modal-location-image" src="https://i.ibb.co/7NbfNHpH/Ubicacion.png" alt="Ubicación de Nissi Moda y Accesorios en grande" class="w-full h-auto rounded-lg">
+        </div>
+    </div>
+    
+    <script>
+        const productsList = document.getElementById('products-list');
+        const statusMessage = document.getElementById('status-message');
+        const categoryCheckboxesContainer = document.getElementById('category-checkboxes');
+        const GOOGLE_SHEET_API_URL = 'https://script.google.com/macros/s/AKfycbwOBs3y2BzSIKPULMaHzg3y2mLG_XutrXF08_R88hw0cMRXDdfRGB0QLpHl5dcsBNKF/exec';
+        
+        let allProducts = [];
+        
+        // Elementos del modal de productos
+        const productModal = document.getElementById('productModal');
+        const closeModalBtn = document.getElementById('closeModalBtn');
+        const modalImage = document.getElementById('modal-image');
+        const modalTitle = document.getElementById('modal-title');
+        const modalDescription = document.getElementById('modal-description');
+        const modalPrice = document.getElementById('modal-price');
+        const modalWhatsappLink = document.getElementById('modal-whatsapp-link');
+
+        // Elementos del modal de ubicación
+        const locationModal = document.getElementById('locationModal');
+        const closeLocationModalBtn = document.getElementById('closeLocationModalBtn');
+        const locationImage = document.getElementById('locationImage');
+        
+        // Función para formatear el precio al estilo de pesos argentinos
+        function formatPrice(price) {
+            let numericValue = price.toString().replace(/[^\d.]/g, '');
+            let number = parseFloat(numericValue);
+            
+            if (isNaN(number)) {
+                return price;
+            }
+            
+            let parts = number.toFixed(2).split('.');
+            let integerPart = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+            let decimalPart = parts[1];
+            
+            return `$${integerPart},${decimalPart}`;
+        }
+        
+        // Funciones para el modal de productos
+        function openModal(product) {
+            modalImage.src = product.Imagen;
+            modalImage.alt = product.Producto;
+            modalTitle.textContent = product.Producto;
+            modalDescription.textContent = product.Descripción;
+            modalPrice.textContent = formatPrice(product.Precio);
+            
+            const phoneNumber = '5493875296652';
+            const message = `¡Hola! 👋 Vengo de su página web y me encantaría saber más sobre ${product.Producto}. ✨`;
+            
+            modalWhatsappLink.href = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
+            
+            productModal.classList.add('open');
+        }
+        
+        function closeModal() {
+            productModal.classList.remove('open');
+        }
+        
+        closeModalBtn.addEventListener('click', closeModal);
+        productModal.addEventListener('click', (e) => {
+            if (e.target === productModal) {
+                closeModal();
+            }
+        });
+
+        // Funciones para el modal de ubicación
+        function openLocationModal() {
+            locationModal.classList.add('open');
+        }
+
+        function closeLocationModal() {
+            locationModal.classList.remove('open');
+        }
+
+        locationImage.addEventListener('click', openLocationModal);
+        closeLocationModalBtn.addEventListener('click', closeLocationModal);
+        locationModal.addEventListener('click', (e) => {
+            if (e.target === locationModal) {
+                closeLocationModal();
+            }
+        });
+        
+        // Función para renderizar los productos en la página
+        function renderProducts(products, container) {
+            container.innerHTML = '';
+            
+            if (!Array.isArray(products) || products.length === 0) {
+                if (container === productsList) {
+                    statusMessage.textContent = 'No se encontraron productos para mostrar.';
+                    statusMessage.style.display = 'block';
+                }
+                return;
+            }
+            
+            if (container === productsList) {
+                statusMessage.style.display = 'none';
+            }
+            
+            products.forEach((product, index) => {
+                const productCard = document.createElement('div');
+                productCard.className = 'product-card bg-white hover:shadow-xl relative';
+                
+                const isOffer = product.En_Oferta && product.En_Oferta.toLowerCase() === 'si';
+                const offerBadge = isOffer ? `<span class="offer-badge">¡OFERTA!</span>` : '';
+    
+                productCard.innerHTML = `
+                    <div class="w-full aspect-square flex items-center justify-center bg-gray-100 overflow-hidden">
+                      <img src="${product.Imagen}" alt="${product.Producto}" onerror="this.onerror=null; this.src='https://placehold.co/400x256/E5E7EB/9CA3AF?text=Imagen+no+disponible';" class="h-full w-full object-cover object-center">
+                    </div>
+                    <div class="p-4">
+                        <h3 class="text-xl font-semibold mb-2">${product.Producto}</h3>
+                        <p class="text-lg font-bold text-gray-800 mb-4">${formatPrice(product.Precio)}</p>
+                        <button class="open-modal-btn block w-full text-center px-4 py-2 bg-[#f2b7d4] text-white rounded hover:bg-[#e9a1c1] transition">Ver Detalles</button>
+                    </div>
+                    ${offerBadge}
+                `;
+                container.appendChild(productCard);
+    
+                productCard.querySelector('.open-modal-btn').addEventListener('click', () => openModal(product));
+                
+                setTimeout(() => {
+                    productCard.classList.add('is-visible');
+                }, index * 100);
+            });
+        }
+        
+        // Función para aplicar los filtros seleccionados
+        function filterProducts() {
+            const selectedCategories = Array.from(document.querySelectorAll('#category-checkboxes input:checked'))
+                                             .map(checkbox => checkbox.value);
+    
+            if (selectedCategories.length === 0) {
+                renderProducts(allProducts, productsList);
+                return;
+            }
+            
+            const filteredProducts = allProducts.filter(product => 
+                selectedCategories.includes(product.Categoría)
+            );
+            
+            renderProducts(filteredProducts, productsList);
+        }
+        
+        // Función para crear los checkboxes de categoría
+        function setupFilters(products) {
+            const categories = [...new Set(products.map(p => p.Categoría).filter(c => c && c.trim() !== ""))];
+            const categoryCounts = products.reduce((counts, product) => {
+                const category = product.Categoría;
+                if (category && category.trim() !== "") {
+                    counts[category] = (counts[category] || 0) + 1;
+                }
+                return counts;
+            }, {});
+            
+            categoryCheckboxesContainer.innerHTML = '';
+            
+            categories.forEach(category => {
+                const count = categoryCounts[category];
+                const checkboxDiv = document.createElement('div');
+                checkboxDiv.className = 'flex items-center gap-2';
+                checkboxDiv.innerHTML = `
+                    <input type="checkbox" id="cat-${category}" name="category" value="${category}" class="form-checkbox h-4 w-4 text-[#f2b7d4] rounded-md">
+                    <label for="cat-${category}" class="text-gray-700 cursor-pointer">${category} (${count})</label>
+                `;
+                categoryCheckboxesContainer.appendChild(checkboxDiv);
+            });
+    
+            // Agregar event listeners a los nuevos checkboxes
+            const checkboxes = categoryCheckboxesContainer.querySelectorAll('input[type="checkbox"]');
+            checkboxes.forEach(checkbox => {
+                checkbox.addEventListener('change', filterProducts);
+            });
+        }
+        
+        async function fetchProducts() {
+            try {
+                statusMessage.textContent = 'Cargando productos...';
+                statusMessage.classList.add('is-visible');
+                const response = await fetch(GOOGLE_SHEET_API_URL);
+                
+                if (!response.ok) {
+                    throw new Error(`Error en la solicitud: ${response.status}`);
+                }
+                
+                const data = await response.json();
+                
+                if (data.status === 'success' && Array.isArray(data.data)) {
+                    allProducts = data.data; // Guardar todos los productos
+                    setupFilters(allProducts);
+                    renderProducts(allProducts, productsList);
+                } else {
+                    throw new Error('La respuesta de la API no tiene el formato esperado.');
+                }
+            } catch (error) {
+                console.error('Error al obtener los productos:', error);
+                statusMessage.textContent = 'Error al cargar los productos. Por favor, revisa el script de Google.';
+                statusMessage.classList.add('is-visible');
+            }
+        }
+        
+        window.onload = function() {
+            fetchProducts();
+        };
+    </script>
+</body>
+</html>
